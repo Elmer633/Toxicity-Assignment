@@ -1,122 +1,164 @@
-Toxicity Prediction Model
+# Toxicity Prediction using Machine Learning
 
-A machine learning model for predicting chemical toxicity using molecular descriptors. This project implements a comprehensive pipeline for data preprocessing, feature selection, and ensemble learning to classify compounds as Toxic or Non-Toxic.
+## Overview
 
-📋 Project Overview
+This project builds a **machine learning model to predict chemical toxicity** based on molecular descriptors. The workflow includes data exploration, preprocessing, feature selection, model training, and evaluation using ensemble learning techniques.
 
-This repository contains a complete machine learning solution for toxicity prediction based on molecular descriptor data. The model uses an ensemble of Random Forest and Gradient Boosting classifiers to achieve high accuracy in distinguishing between toxic and non-toxic compounds.
+The goal is to automatically classify compounds as **toxic or non-toxic** using statistical and machine learning methods.
 
-Key Features
+---
 
-Comprehensive EDA with visualization of key molecular properties
+## Project Objectives
 
-Intelligent feature selection using Random Forest importance
+* Analyze and understand the distribution of chemical descriptor data.
+* Detect and handle issues such as **missing values, infinite values, and class imbalance**.
+* Perform **feature selection** to identify the most important molecular descriptors.
+* Train and evaluate **ensemble machine learning models**.
+* Save the trained model for future predictions.
 
-Ensemble learning with soft voting for robust predictions
+---
 
-Handling of severe class imbalance (67:1 ratio)
+## Dataset
 
-Cross-validated performance with StratifiedKFold
+The dataset contains **chemical compounds described by multiple molecular descriptors**, including features such as:
 
-Production-ready pipeline with saved models and preprocessors
+* `XLogP` – Lipophilicity
+* `MW` – Molecular Weight
+* `nHBDon` – Number of Hydrogen Bond Donors
+* `nHBAcc` – Number of Hydrogen Bond Acceptors
+* `nRotB` – Number of Rotatable Bonds
+* `TopoPSA` – Topological Polar Surface Area
 
-📊 Dataset
+The target variable:
 
-The dataset contains 545 samples with 1803 molecular descriptor features, including:
+* **Class**
 
-Constitutional indices
+  * `Toxic`
+  * `Non-Toxic`
 
-Topological descriptors
+---
 
-Geometrical descriptors
+## Project Workflow
 
-Electronic descriptors
+### 1. Exploratory Data Analysis (EDA)
 
-Molecular properties (LogP, Molecular Weight, etc.)
+The project begins by analyzing the dataset to understand:
+
+* Class distribution
+* Missing values
+* Infinite values
+* Feature variance
+* Feature distributions
+* Correlation with the target variable
+
+Visualizations are created using **Matplotlib** and **Seaborn**.
+
+---
+
+### 2. Data Preprocessing
+
+The following preprocessing steps are applied:
+
+* Separating **features (X)** and **target variable (y)**
+* Encoding categorical labels using **LabelEncoder**
+* Handling missing and infinite values
+* Standardizing numerical features using **StandardScaler**
+
+---
+
+### 3. Train-Test Split
+
+The dataset is split into training and testing sets using:
+
+* `train_test_split`
+* Stratified sampling to preserve class distribution
+
+---
+
+### 4. Feature Selection
+
+Feature selection is performed using a **Random Forest classifier** to identify the most important features.
+
+Benefits:
+
+* Reduces dimensionality
+* Improves model performance
+* Removes irrelevant descriptors
+
+---
+
+### 5. Model Building
+
+An **ensemble learning approach** is used combining:
+
+* **Random Forest Classifier**
+* **Gradient Boosting Classifier**
+
+These models are integrated in a **pipeline** for preprocessing and classification.
+
+---
+
+### 6. Model Evaluation
+
+The trained model is evaluated using:
+
+* **Accuracy**
+* **ROC-AUC Score**
+* **Cross-validation**
+
+This ensures the model performs well and generalizes to unseen data.
+
+---
+
+### 7. Feature Importance Analysis
+
+The importance of each selected feature is analyzed using the trained Random Forest model to determine which molecular descriptors contribute most to toxicity prediction.
+
+---
+
+### 8. Model Saving
+
+The trained pipeline and preprocessing components are saved for reuse using **Joblib**.
+
+Saved files include:
+
+```
+toxic_prediction_model.pkl
+label_encoder.pkl
+feature_selector.pkl
+```
+
+These can later be loaded to perform predictions on new chemical data.
+
+---
+
+## Technologies Used
+
+### Programming Language
+
+* Python
+
+### Libraries
+
+* Pandas
+* NumPy
+* Matplotlib
+* Seaborn
+* Scikit-learn
+* Joblib
+
+---
+
+## Project Structure
+
+```
+Toxicity-Prediction/
+│
+├── Toxicity.ipynb
+├── toxic_prediction_model.pkl
+├── label_encoder.pkl
+├── feature_selector.pkl
+├── README.md
+└── dataset.csv
 
 
-Class Distribution
-
-Non-Toxic: 537 samples (98.5%)
-
-Toxic: 8 samples (1.5%)
-
-
-🏗️ Model Architecture
-
-Data Preprocessing
-
-Label encoding of target variable
-
-Train-test split with stratification (80-20)
-
-Standard scaling of features
-
-Handling of missing/infinite values
-
-Feature Selection
-Random Forest-based feature importance
-
-Median threshold selection
-
-Reduction from 1803 to 901 features
-
-Ensemble Model
-
-python
-Ensemble Components:
-├── Random Forest (200 estimators, max_depth=15)
-└── Gradient Boosting (200 estimators, max_depth=5, learning_rate=0.1)
-└── Soft voting classifier
-
-📈 Performance Metrics
-
-Cross-Validation Results (5-fold)
-
-Metric	Score	Std Dev
-
-Accuracy	98.63%	±1.44%
-
-ROC-AUC	99.91%	±0.15%
-
-Test Set Performance
-
-Metric	Score
-
-Accuracy	99.08%
-
-ROC-AUC	100%
-
-Classification Report
-
-text
-              precision    recall  f1-score   support
-    NonToxic       1.00      0.99      1.00       108
-       Toxic       0.50      1.00      0.67         1
-       
-🚀 Quick Start
-Prerequisites
-bash
-pip install -r requirements.txt
-Basic Usage
-python
-import joblib
-import pandas as pd
-
-# Load the model and preprocessors
-model = joblib.load('toxic_prediction_model.pkl')
-label_encoder = joblib.load('label_encoder.pkl')
-feature_selector = joblib.load('feature_selector.pkl')
-
-# Prepare your data (should have same features as training data)
-# X_new = your_new_data[selected_features]
-
-# Make predictions
-predictions = model.predict(X_new)
-probabilities = model.predict_proba(X_new)
-
-# Decode predictions
-predicted_labels = label_encoder.inverse_transform(predictions)
-Training Your Own Model
-python
-python train_model.py --data data.csv --output models/
