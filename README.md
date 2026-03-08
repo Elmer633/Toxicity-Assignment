@@ -149,16 +149,4 @@ These can later be loaded to perform predictions on new chemical data.
 
 ---
 
-## Project Structure
-
-```
-Toxicity-Prediction/
-│
-├── Toxicity.ipynb
-├── toxic_prediction_model.pkl
-├── label_encoder.pkl
-├── feature_selector.pkl
-├── README.md
-└── dataset.csv
-
 
